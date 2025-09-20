@@ -6,6 +6,9 @@
 !index.html
 !frontend/
 !frontend/index.html
+!frontend/welcome.html
+!frontend/questions.html
+!frontend/results.html
 !.gitignore
 
 # Игнорировать системные файлы
