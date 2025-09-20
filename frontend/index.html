@@ -312,6 +312,12 @@
                 type: "select",
                 key: "sleep",
                 options: ["Менее 6 часов", "6-7 часов", "7-8 часов", "Более 8 часов"]
+            },
+            {
+                title: "Как часто употребляете фастфуд?",
+                type: "select",
+                key: "fastfood",
+                options: ["Никогда", "Раз в месяц", "Раз в неделю", "Несколько раз в неделю", "Каждый день"]
             }
         ];
         
@@ -403,6 +409,11 @@
             
             if (answers.sleep === '7-8 часов') baseAge += 2;
             if (answers.sleep === 'Менее 6 часов') baseAge -= 3;
+            
+            if (answers.fastfood === 'Никогда') baseAge += 2;
+            if (answers.fastfood === 'Раз в месяц') baseAge += 1;
+            if (answers.fastfood === 'Несколько раз в неделю') baseAge -= 2;
+            if (answers.fastfood === 'Каждый день') baseAge -= 4;
             
             if (answers.gender === 'Женский') baseAge += 3;
             
