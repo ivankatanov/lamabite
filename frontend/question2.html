@@ -4,210 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KamaLama BITE - Вопрос 2</title>
-    
+
     <!-- Telegram Mini App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .progress-bar {
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            background: linear-gradient(90deg, #007AFF, #34C759);
-            height: 100%;
-            transition: width 0.3s ease;
-            width: 66.67%;
-        }
-        
-        .question-card {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .question-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .question-number {
-            color: var(--tg-theme-hint-color, #999999);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .option {
-            background: var(--tg-theme-bg-color, #ffffff);
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-        
-        .option:hover {
-            border-color: var(--tg-theme-button-color, #007AFF);
-        }
-        
-        .option.selected {
-            border-color: var(--tg-theme-button-color, #007AFF);
-            background: rgba(0, 122, 255, 0.1);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 15px;
-        }
-        
-        .btn-primary {
-            background: var(--tg-theme-button-color, #007AFF);
-            color: var(--tg-theme-button-text-color, #ffffff);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-secondary {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            color: var(--tg-theme-text-color, #000000);
-            border: 2px solid #e0e0e0;
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .navigation {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .navigation .btn {
-            flex: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
-    <div class="container">
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
-        
-        <div class="question-card">
-            <div class="question-number">Вопрос 2 из 3</div>
-            <h2 class="question-title">Как часто вы занимаетесь физической активностью?</h2>
-            <p class="question-description">Любые действия, которые повышают частоту сердечных сокращений и дыхания, такие как быстрая ходьба, бег или езда на велосипеде — всё имеет значение.</p>
-            
-            <div class="options">
-                <div class="option" data-value="1_2_times">1–2 раза в неделю</div>
-                <div class="option" data-value="3_4_times">3–4 раза в неделю</div>
-                <div class="option" data-value="5_more_times">5 или более раз в неделю</div>
-                <div class="option" data-value="rarely_never">Редко или никогда</div>
+    <main class="page">
+        <div class="container">
+            <div class="progress-bar" aria-hidden="true">
+                <div class="progress-fill" style="width: 66.67%;"></div>
+            </div>
+
+            <section class="card question-card">
+                <p class="question-card__meta">Вопрос 2 из 3</p>
+                <h2>Как часто вы занимаетесь физической активностью?</h2>
+                <p class="muted">Любые действия, которые повышают частоту сердечных сокращений и дыхания: быстрая ходьба, бег или езда на велосипеде — всё имеет значение.</p>
+
+                <div class="options-group" id="activity-options">
+                    <div class="option" data-value="1_2_times">1–2 раза в неделю</div>
+                    <div class="option" data-value="3_4_times">3–4 раза в неделю</div>
+                    <div class="option" data-value="5_more_times">5 или более раз в неделю</div>
+                    <div class="option" data-value="rarely_never">Редко или никогда</div>
+                </div>
+            </section>
+
+            <div class="navigation">
+                <button class="btn btn-secondary" type="button" onclick="goBack()">Назад</button>
+                <button class="btn btn-primary" type="button" id="next-btn" onclick="nextQuestion()" disabled>Далее</button>
             </div>
         </div>
-        
-        <div class="navigation">
-            <button class="btn btn-secondary" onclick="goBack()">Назад</button>
-            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Далее</button>
-        </div>
-    </div>
-    
+    </main>
+
     <script>
         // Инициализация Telegram WebApp
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
         }
-        
+
         const options = document.querySelectorAll('.option');
-        const nextBtn = document.getElementById('next-btn');
         let selectedAnswer = null;
-        
+
         // Загружаем сохраненный ответ
         const savedAnswers = JSON.parse(localStorage.getItem('kamalama_answers') || '{}');
         if (savedAnswers.activity) {
             selectedAnswer = savedAnswers.activity;
-            options.forEach(option => {
-                if (option.dataset.value === selectedAnswer) {
-                    option.classList.add('selected');
-                    nextBtn.disabled = false;
-                }
-            });
+            const savedOption = document.querySelector(`.option[data-value="${selectedAnswer}"]`);
+            if (savedOption) {
+                savedOption.classList.add('selected');
+                document.getElementById('next-btn').disabled = false;
+            }
         }
-        
-        // Обработчики кликов по опциям
+
         options.forEach(option => {
-            option.addEventListener('click', function() {
-                // Убираем выделение с других опций
+            option.addEventListener('click', () => {
                 options.forEach(opt => opt.classList.remove('selected'));
-                
-                // Выделяем текущую опцию
-                this.classList.add('selected');
-                selectedAnswer = this.dataset.value;
-                
-                // Активируем кнопку "Далее"
-                nextBtn.disabled = false;
-                
-                // Сохраняем ответ
+                option.classList.add('selected');
+                selectedAnswer = option.dataset.value;
+                document.getElementById('next-btn').disabled = false;
                 saveAnswer('activity', selectedAnswer);
             });
         });
-        
+
         function saveAnswer(key, value) {
             const answers = JSON.parse(localStorage.getItem('kamalama_answers') || '{}');
             answers[key] = value;
             localStorage.setItem('kamalama_answers', JSON.stringify(answers));
         }
-        
+
         function nextQuestion() {
             if (selectedAnswer) {
                 saveAnswer('activity', selectedAnswer);
                 window.location.href = 'question3.html';
             }
         }
-        
+
         function goBack() {
             window.location.href = 'question1.html';
         }
