@@ -426,6 +426,30 @@ small {
   border: 1px solid var(--primary);
 }
 
+.btn-ghost {
+  background: rgba(17, 24, 39, 0.05);
+  color: var(--text);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+.btn-ghost:hover {
+  opacity: 0.9;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-ghost:active {
+  transform: translateY(0);
+  opacity: 0.85;
+  box-shadow: none;
+}
+
+.keyboard-dismiss {
+  margin-left: auto;
+  flex: none;
+  white-space: nowrap;
+}
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
