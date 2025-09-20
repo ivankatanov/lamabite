@@ -156,88 +156,96 @@
             
             const answers = JSON.parse(savedAnswers);
             
-            // Простой расчет для демо
+            // Базовая ожидаемая продолжительность жизни
             let baseAge = 75;
             let recommendations = [];
             
-            // Корректировки на основе ответов
-            if (answers.smoking === 'Курю сейчас') {
-                baseAge -= 5;
+            // Корректировки на основе количества шагов
+            if (answers.steps === '10001_more') {
+                baseAge += 4;
                 recommendations.push({
-                    title: 'Бросьте курить',
-                    description: 'Отказ от курения может добавить до 10 лет жизни'
+                    title: 'Отлично! Вы очень активны',
+                    description: 'Высокая физическая активность значительно увеличивает продолжительность жизни'
                 });
-            }
-            if (answers.smoking === 'Бросил(а) курить') {
-                baseAge -= 2;
-                recommendations.push({
-                    title: 'Отлично! Вы бросили курить',
-                    description: 'Продолжайте вести здоровый образ жизни'
-                });
-            }
-            
-            if (answers.exercise === 'Каждый день') {
+            } else if (answers.steps === '8001_10000') {
                 baseAge += 3;
-            } else if (answers.exercise === '3-5 раз в неделю') {
+            } else if (answers.steps === '6001_8000') {
                 baseAge += 2;
-            } else if (answers.exercise === '1-2 раза в неделю') {
+            } else if (answers.steps === '4001_6000') {
                 baseAge += 1;
-            } else {
+            } else if (answers.steps === '2201_4000') {
+                baseAge -= 1;
                 recommendations.push({
-                    title: 'Увеличьте физическую активность',
-                    description: 'Регулярные упражнения могут добавить до 3 лет жизни'
+                    title: 'Увеличьте ежедневную активность',
+                    description: 'Старайтесь делать больше шагов каждый день - цель 8000-10000 шагов'
                 });
-            }
-            
-            if (answers.sleep === '7-8 часов') {
-                baseAge += 2;
-            } else if (answers.sleep === 'Менее 6 часов') {
+            } else if (answers.steps === 'less_2200') {
                 baseAge -= 3;
                 recommendations.push({
-                    title: 'Улучшите качество сна',
-                    description: '7-8 часов качественного сна критически важны'
+                    title: 'Критически важно увеличить активность',
+                    description: 'Малоподвижный образ жизни серьезно сокращает продолжительность жизни'
                 });
             }
             
-            if (answers.fastfood === 'Никогда') {
+            // Корректировки на основе физической активности
+            if (answers.activity === '5_more_times') {
+                baseAge += 3;
+            } else if (answers.activity === '3_4_times') {
                 baseAge += 2;
-            } else if (answers.fastfood === 'Раз в месяц') {
+            } else if (answers.activity === '1_2_times') {
                 baseAge += 1;
-            } else if (answers.fastfood === 'Несколько раз в неделю') {
-                baseAge -= 2;
-                recommendations.push({
-                    title: 'Сократите потребление фастфуда',
-                    description: 'Здоровое питание может добавить до 5 лет жизни'
-                });
-            } else if (answers.fastfood === 'Каждый день') {
+            } else if (answers.activity === 'rarely_never') {
                 baseAge -= 4;
                 recommendations.push({
-                    title: 'Измените рацион питания',
-                    description: 'Добавьте больше овощей, фруктов и цельных продуктов'
+                    title: 'Начните заниматься спортом',
+                    description: 'Регулярные упражнения могут добавить до 7 лет жизни'
                 });
             }
             
-            if (answers.gender === 'Женский') {
+            // Корректировки на основе сна
+            if (answers.sleep === '7_8') {
                 baseAge += 3;
+                recommendations.push({
+                    title: 'Отличный режим сна!',
+                    description: 'Вы спите оптимальное количество часов для здоровья'
+                });
+            } else if (answers.sleep === '5_6') {
+                baseAge -= 1;
+                recommendations.push({
+                    title: 'Увеличьте продолжительность сна',
+                    description: 'Старайтесь спать 7-8 часов для оптального здоровья'
+                });
+            } else if (answers.sleep === 'less_5') {
+                baseAge -= 4;
+                recommendations.push({
+                    title: 'Критически важно улучшить сон',
+                    description: 'Недостаток сна серьезно влияет на здоровье и продолжительность жизни'
+                });
+            } else if (answers.sleep === 'more_8') {
+                baseAge -= 1;
+                recommendations.push({
+                    title: 'Оптимизируйте продолжительность сна',
+                    description: 'Слишком долгий сон также может негативно влиять на здоровье'
+                });
             }
             
             // Добавляем общие рекомендации если их мало
             if (recommendations.length < 2) {
                 recommendations.push({
-                    title: 'Добавьте больше овощей и фруктов',
-                    description: '5 порций в день снижают риск многих заболеваний'
+                    title: 'Поддерживайте здоровое питание',
+                    description: 'Сбалансированный рацион с овощами и фруктами продлевает жизнь'
                 });
             }
             
             if (recommendations.length < 3) {
                 recommendations.push({
                     title: 'Регулярные медицинские осмотры',
-                    description: 'Раннее выявление проблем увеличивает шансы на долгую жизнь'
+                    description: 'Профилактика и раннее выявление проблем критически важны'
                 });
             }
             
             return {
-                lifeExpectancy: Math.round(baseAge),
+                lifeExpectancy: Math.max(65, Math.min(95, Math.round(baseAge))), // Ограничиваем диапазон 65-95 лет
                 recommendations: recommendations
             };
         }

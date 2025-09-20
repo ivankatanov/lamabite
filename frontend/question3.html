@@ -40,7 +40,7 @@
             background: linear-gradient(90deg, #007AFF, #34C759);
             height: 100%;
             transition: width 0.3s ease;
-            width: 50%;
+            width: 100%;
         }
         
         .question-card {
@@ -136,13 +136,15 @@
         </div>
         
         <div class="question-card">
-            <div class="question-number">Вопрос 3 из 6</div>
-            <h2 class="question-title">Курите ли вы?</h2>
+            <div class="question-number">Вопрос 3 из 3</div>
+            <h2 class="question-title">Сколько часов сна вы обычно получаете за ночь?</h2>
+            <p class="question-description">Пожалуйста, оцените среднюю продолжительность вашего ночного сна за последний год или проверьте её с помощью смартфона или устройства.</p>
             
             <div class="options">
-                <div class="option" data-value="Никогда не курил(а)">Никогда не курил(а)</div>
-                <div class="option" data-value="Бросил(а) курить">Бросил(а) курить</div>
-                <div class="option" data-value="Курю сейчас">Курю сейчас</div>
+                <div class="option" data-value="less_5">Менее 5 часов</div>
+                <div class="option" data-value="5_6">5–6 часов</div>
+                <div class="option" data-value="7_8">7–8 часов</div>
+                <div class="option" data-value="more_8">Более 8 часов</div>
             </div>
         </div>
         
@@ -165,8 +167,8 @@
         
         // Загружаем сохраненный ответ
         const savedAnswers = JSON.parse(localStorage.getItem('kamalama_answers') || '{}');
-        if (savedAnswers.smoking) {
-            selectedAnswer = savedAnswers.smoking;
+        if (savedAnswers.sleep) {
+            selectedAnswer = savedAnswers.sleep;
             options.forEach(option => {
                 if (option.dataset.value === selectedAnswer) {
                     option.classList.add('selected');
@@ -189,7 +191,7 @@
                 nextBtn.disabled = false;
                 
                 // Сохраняем ответ
-                saveAnswer('smoking', selectedAnswer);
+                saveAnswer('sleep', selectedAnswer);
             });
         });
         
@@ -201,8 +203,8 @@
         
         function nextQuestion() {
             if (selectedAnswer) {
-                saveAnswer('smoking', selectedAnswer);
-                window.location.href = 'question4.html';
+                saveAnswer('sleep', selectedAnswer);
+                window.location.href = 'results.html';
             }
         }
         

@@ -40,7 +40,7 @@
             background: linear-gradient(90deg, #007AFF, #34C759);
             height: 100%;
             transition: width 0.3s ease;
-            width: 33.33%;
+            width: 66.67%;
         }
         
         .question-card {
@@ -136,12 +136,15 @@
         </div>
         
         <div class="question-card">
-            <div class="question-number">Вопрос 2 из 6</div>
-            <h2 class="question-title">Ваш пол?</h2>
+            <div class="question-number">Вопрос 2 из 3</div>
+            <h2 class="question-title">Как часто вы занимаетесь физической активностью?</h2>
+            <p class="question-description">Любые действия, которые повышают частоту сердечных сокращений и дыхания, такие как быстрая ходьба, бег или езда на велосипеде — всё имеет значение.</p>
             
             <div class="options">
-                <div class="option" data-value="Мужской">Мужской</div>
-                <div class="option" data-value="Женский">Женский</div>
+                <div class="option" data-value="1_2_times">1–2 раза в неделю</div>
+                <div class="option" data-value="3_4_times">3–4 раза в неделю</div>
+                <div class="option" data-value="5_more_times">5 или более раз в неделю</div>
+                <div class="option" data-value="rarely_never">Редко или никогда</div>
             </div>
         </div>
         
@@ -164,8 +167,8 @@
         
         // Загружаем сохраненный ответ
         const savedAnswers = JSON.parse(localStorage.getItem('kamalama_answers') || '{}');
-        if (savedAnswers.gender) {
-            selectedAnswer = savedAnswers.gender;
+        if (savedAnswers.activity) {
+            selectedAnswer = savedAnswers.activity;
             options.forEach(option => {
                 if (option.dataset.value === selectedAnswer) {
                     option.classList.add('selected');
@@ -188,7 +191,7 @@
                 nextBtn.disabled = false;
                 
                 // Сохраняем ответ
-                saveAnswer('gender', selectedAnswer);
+                saveAnswer('activity', selectedAnswer);
             });
         });
         
@@ -200,7 +203,7 @@
         
         function nextQuestion() {
             if (selectedAnswer) {
-                saveAnswer('gender', selectedAnswer);
+                saveAnswer('activity', selectedAnswer);
                 window.location.href = 'question3.html';
             }
         }
