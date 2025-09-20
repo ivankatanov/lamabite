@@ -19,7 +19,6 @@ Thumbs.db
 
 # Игнорировать папки
 docs/
-frontend/
 media/
 src/
 
