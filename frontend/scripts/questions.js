@@ -22,6 +22,116 @@
     const nextButton = document.getElementById('next-button');
     const isCoarsePointer = window.matchMedia ? window.matchMedia('(pointer: coarse)').matches : false;
 
+    function sanitizeNumericString(value, allowDecimal) {
+        if (typeof value !== 'string') {
+            return '';
+        }
+
+        let sanitized = '';
+        let hasSeparator = false;
+        for (const char of value) {
+            if (/\d/.test(char)) {
+                sanitized += char;
+            } else if (allowDecimal && (char === '.' || char === ',')) {
+                if (!hasSeparator) {
+                    sanitized += ',';
+                    hasSeparator = true;
+                }
+            }
+        }
+
+        return sanitized;
+    }
+
+    function parseNumericValue(value, allowDecimal) {
+        const sanitized = sanitizeNumericString(value, allowDecimal).trim();
+        if (sanitized === '') {
+            return null;
+        }
+
+        const normalized = allowDecimal ? sanitized.replace(',', '.') : sanitized;
+        const numeric = Number(normalized);
+        if (!Number.isFinite(numeric)) {
+            return null;
+        }
+
+        return allowDecimal ? numeric : Math.trunc(numeric);
+    }
+
+    function createNumericTextInput(options) {
+        const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'input';
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        input.setAttribute('inputmode', allowDecimal ? 'decimal' : 'numeric');
+        input.setAttribute('enterkeyhint', enterKeyHint ?? 'done');
+        input.setAttribute('pattern', allowDecimal ? '[0-9]+([.,][0-9]+)?' : '[0-9]*');
+
+        if (placeholder) {
+            input.placeholder = placeholder;
+        }
+
+        const sanitize = () => {
+            const sanitized = sanitizeNumericString(input.value, allowDecimal);
+            if (sanitized !== input.value) {
+                input.value = sanitized;
+            }
+        };
+
+        input.addEventListener('input', sanitize);
+        input.addEventListener('blur', sanitize);
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (typeof onEnter === 'function') {
+                    onEnter();
+                } else {
+                    input.blur();
+                }
+            }
+        });
+
+        return input;
+    }
+
+    function isWithinRange(value, min, max) {
+        if (typeof min === 'number' && value < min) {
+            return false;
+        }
+        if (typeof max === 'number' && value > max) {
+            return false;
+        }
+        return true;
+    }
+
+    function formatRangeHelper(min, max) {
+        if (typeof min === 'number' && typeof max === 'number') {
+            return `Введите целое число в диапазоне от ${min} до ${max}.`;
+        }
+        if (typeof min === 'number') {
+            return `Введите значение не меньше ${min}.`;
+        }
+        if (typeof max === 'number') {
+            return `Введите значение не больше ${max}.`;
+        }
+        return 'Введите числовое значение.';
+    }
+
+    function formatRangeError(min, max) {
+        if (typeof min === 'number' && typeof max === 'number') {
+            return `Используйте значение от ${min} до ${max}.`;
+        }
+        if (typeof min === 'number') {
+            return `Используйте значение не меньше ${min}.`;
+        }
+        if (typeof max === 'number') {
+            return `Используйте значение не больше ${max}.`;
+        }
+        return 'Введите корректное числовое значение.';
+    }
+
     const questions = [
         {
             id: 'steps',
@@ -399,21 +509,19 @@
         const field = document.createElement('div');
         field.className = 'field stack';
 
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.className = 'input';
-        input.autocomplete = 'off';
-        input.setAttribute('inputmode', 'numeric');
-        input.setAttribute('enterkeyhint', 'done');
-        if (question.placeholder) {
-            input.placeholder = question.placeholder;
-        }
-        if (typeof question.min === 'number') {
-            input.min = String(question.min);
-        }
-        if (typeof question.max === 'number') {
-            input.max = String(question.max);
-        }
+        const input = createNumericTextInput({
+            allowDecimal: false,
+            placeholder: question.placeholder,
+            enterKeyHint: 'done',
+            onEnter: () => {
+                if (!nextButton.disabled) {
+                    input.blur();
+                    nextButton.click();
+                } else {
+                    input.blur();
+                }
+            }
+        });
 
         const savedValue = answers[question.id];
         if (savedValue !== undefined && savedValue !== null && savedValue !== '') {
@@ -421,32 +529,43 @@
         }
 
         const helper = document.createElement('p');
+        const helperDefault = formatRangeHelper(question.min, question.max);
         helper.className = 'muted';
-        helper.textContent = 'Введите целое число. Минимум 18, максимум 90.';
+        helper.textContent = helperDefault;
 
         input.addEventListener('focus', ensureNextVisible);
-        input.addEventListener('input', () => {
+        const handleValueChange = () => {
             const value = input.value.trim();
-            const numericValue = Number(value);
-            const valid = value !== '' && !Number.isNaN(numericValue) && numericValue >= (question.min ?? -Infinity) && numericValue <= (question.max ?? Infinity);
+            const numericValue = parseNumericValue(value, false);
+            const hasValue = value !== '';
+            const valid = numericValue !== null && isWithinRange(numericValue, question.min, question.max);
+
             if (valid) {
                 answers[question.id] = numericValue;
             } else {
                 delete answers[question.id];
             }
+
             persistAnswers();
             nextButton.disabled = !valid;
-        });
 
-        input.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (!nextButton.disabled) {
-                    input.blur();
-                    nextButton.click();
-                }
+            if (!hasValue) {
+                helper.className = 'muted';
+                helper.textContent = helperDefault;
+                return;
             }
-        });
+
+            if (valid) {
+                helper.className = 'muted';
+                helper.textContent = helperDefault;
+            } else {
+                helper.className = 'error';
+                helper.textContent = formatRangeError(question.min, question.max);
+            }
+        };
+
+        input.addEventListener('input', handleValueChange);
+        input.addEventListener('blur', handleValueChange);
 
         field.appendChild(input);
         field.appendChild(helper);
@@ -558,29 +677,31 @@
         const heightWrapper = document.createElement('label');
         heightWrapper.className = 'field stack';
         heightWrapper.textContent = 'Рост (см)';
-        const heightInput = document.createElement('input');
-        heightInput.type = 'number';
-        heightInput.className = 'input';
-        heightInput.placeholder = 'Например, 170';
-        heightInput.min = '100';
-        heightInput.max = '230';
-        heightInput.setAttribute('inputmode', 'numeric');
-        heightInput.setAttribute('enterkeyhint', 'next');
-        heightInput.addEventListener('focus', ensureNextVisible);
+        const heightRange = { min: 100, max: 230 };
+        let weightInput;
+        const heightInput = createNumericTextInput({
+            allowDecimal: false,
+            placeholder: 'Например, 170',
+            enterKeyHint: 'next',
+            onEnter: () => {
+                if (weightInput) {
+                    weightInput.focus();
+                } else {
+                    heightInput.blur();
+                }
+            }
+        });
         heightWrapper.appendChild(heightInput);
 
         const weightWrapper = document.createElement('label');
         weightWrapper.className = 'field stack';
         weightWrapper.textContent = 'Вес (кг)';
-        const weightInput = document.createElement('input');
-        weightInput.type = 'number';
-        weightInput.className = 'input';
-        weightInput.placeholder = 'Например, 65';
-        weightInput.min = '30';
-        weightInput.max = '250';
-        weightInput.setAttribute('inputmode', 'numeric');
-        weightInput.setAttribute('enterkeyhint', 'done');
-        weightInput.addEventListener('focus', ensureNextVisible);
+        const weightRange = { min: 30, max: 250 };
+        weightInput = createNumericTextInput({
+            allowDecimal: true,
+            placeholder: 'Например, 65',
+            enterKeyHint: 'done'
+        });
         weightWrapper.appendChild(weightInput);
 
         inputsRow.appendChild(heightWrapper);
@@ -594,26 +715,81 @@
         calculateButton.className = 'btn btn-secondary';
         calculateButton.textContent = 'Рассчитать ИМТ';
 
+        const keyboardDismissButton = document.createElement('button');
+        keyboardDismissButton.type = 'button';
+        keyboardDismissButton.className = 'btn btn-ghost keyboard-dismiss';
+        keyboardDismissButton.textContent = 'Готово';
+        keyboardDismissButton.setAttribute('aria-label', 'Скрыть клавиатуру');
+        keyboardDismissButton.hidden = true;
+
+        const focusableInputs = [heightInput, weightInput];
+        const updateKeyboardDismissVisibility = () => {
+            const active = document.activeElement;
+            const shouldShow = focusableInputs.includes(active);
+            keyboardDismissButton.hidden = !shouldShow;
+        };
+        const scheduleKeyboardDismissUpdate = () => {
+            window.setTimeout(() => {
+                updateKeyboardDismissVisibility();
+            }, 100);
+        };
+
+        focusableInputs.forEach((input) => {
+            input.addEventListener('focus', () => {
+                ensureNextVisible();
+                updateKeyboardDismissVisibility();
+            });
+            input.addEventListener('blur', scheduleKeyboardDismissUpdate);
+        });
+
+        keyboardDismissButton.addEventListener('click', () => {
+            const active = document.activeElement;
+            if (focusableInputs.includes(active)) {
+                active.blur();
+            }
+            keyboardDismissButton.hidden = true;
+        });
+
         const status = document.createElement('p');
         status.className = 'muted';
+        status.setAttribute('role', 'status');
         if (stored && typeof stored === 'object' && stored.bmi) {
             status.textContent = `Сохранённый результат: ${stored.bmi}. Категория — ${humanizeBmiCategory(stored.category)}.`;
         }
 
         calculateButton.addEventListener('click', () => {
-            const height = Number(heightInput.value);
-            const weight = Number(weightInput.value);
-            if (!height || !weight) {
+            updateKeyboardDismissVisibility();
+            const active = document.activeElement;
+            if (focusableInputs.includes(active)) {
+                active.blur();
+            }
+            keyboardDismissButton.hidden = true;
+
+            const height = parseNumericValue(heightInput.value, false);
+            const weight = parseNumericValue(weightInput.value, true);
+            if (height === null || weight === null) {
+                status.className = 'error';
                 status.textContent = 'Введите рост и вес, чтобы рассчитать ИМТ.';
-                status.classList.add('error');
+                return;
+            }
+
+            if (!isWithinRange(height, heightRange.min, heightRange.max)) {
+                status.className = 'error';
+                status.textContent = `Рост должен быть в пределах ${heightRange.min}–${heightRange.max} см.`;
+                return;
+            }
+
+            if (!isWithinRange(weight, weightRange.min, weightRange.max)) {
+                status.className = 'error';
+                status.textContent = `Вес должен быть в пределах ${weightRange.min}–${weightRange.max} кг.`;
                 return;
             }
 
             const heightMeters = height / 100;
             const bmi = weight / (heightMeters * heightMeters);
             if (!Number.isFinite(bmi)) {
+                status.className = 'error';
                 status.textContent = 'Проверьте корректность введённых значений.';
-                status.classList.add('error');
                 return;
             }
 
@@ -636,6 +812,7 @@
         });
 
         controls.appendChild(calculateButton);
+        controls.appendChild(keyboardDismissButton);
         calculator.appendChild(inputsRow);
         calculator.appendChild(controls);
         calculator.appendChild(status);
