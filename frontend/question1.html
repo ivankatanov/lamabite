@@ -62,7 +62,7 @@
             margin-bottom: 10px;
         }
         
-        .options {
+        .options, .options-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -77,15 +77,25 @@
             transition: all 0.2s ease;
             text-align: center;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
         }
         
         .option:hover {
             border-color: var(--tg-theme-button-color, #007AFF);
         }
         
-        .option.selected {
+        .option.selected, .option input:checked + .option-text {
             border-color: var(--tg-theme-button-color, #007AFF);
             background: rgba(0, 122, 255, 0.1);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .option-text {
+            flex: 1;
         }
         
         .btn {
