@@ -62,20 +62,20 @@
             margin-bottom: 10px;
         }
         
-        .options, .options-group {
+        .options-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-top: 15px;
         }
         
         .option {
             background: var(--tg-theme-bg-color, #ffffff);
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px 15px;
             cursor: pointer;
             transition: all 0.2s ease;
-            text-align: center;
             font-size: 1rem;
             display: flex;
             align-items: center;
@@ -85,11 +85,6 @@
             border-color: var(--tg-theme-button-color, #007AFF);
         }
         
-        .option.selected, .option input:checked + .option-text {
-            border-color: var(--tg-theme-button-color, #007AFF);
-            background: rgba(0, 122, 255, 0.1);
-        }
-        
         .option input[type="radio"] {
             margin-right: 10px;
         }
@@ -97,6 +92,21 @@
         .option-text {
             flex: 1;
         }
+        
+        /* Стиль для выбранного варианта */
+        .option input[type="radio"]:checked ~ .option-text {
+            font-weight: 500;
+        }
+        
+        .option input[type="radio"]:checked {
+            accent-color: var(--tg-theme-button-color, #007AFF);
+        }
+        
+        .option input[type="radio"]:checked ~ * {
+            color: var(--tg-theme-button-color, #007AFF);
+        }
+        
+        /* Убираем text-align: center, чтобы текст был выровнен по левому краю */
         
         .btn {
             width: 100%;
