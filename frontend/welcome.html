@@ -4,130 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KamaLama BITE - Добро пожаловать</title>
-    
+
     <!-- Telegram Mini App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #007AFF, #34C759);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: var(--tg-theme-hint-color, #999999);
-            font-size: 1.1rem;
-        }
-        
-        .card {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .features {
-            list-style: none;
-        }
-        
-        .features li {
-            padding: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .features li::before {
-            content: "✓";
-            color: #34C759;
-            font-weight: bold;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 15px;
-        }
-        
-        .btn-primary {
-            background: var(--tg-theme-button-color, #007AFF);
-            color: var(--tg-theme-button-text-color, #ffffff);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        
-        .privacy-note {
-            background: rgba(52, 199, 89, 0.1);
-            border: 1px solid #34C759;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #34C759;
-        }
-    </style>
+    <script src="scripts/layout.js"></script>
+    <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">KamaLama BITE</div>
-            <div class="subtitle">Узнайте свою ожидаемую продолжительность жизни</div>
+    <main class="page">
+        <div class="container">
+            <header class="stack text-center">
+                <span class="brand-logo">KamaLama BITE</span>
+                <p class="subtitle">Узнайте свою ожидаемую продолжительность жизни</p>
+            </header>
+
+            <section class="card stack-lg text-center">
+                <h1>Быстрый тест о здоровье и привычках</h1>
+                <p class="muted">Ответьте на несколько вопросов и получите персональные рекомендации для улучшения качества жизни.</p>
+                <ul class="feature-list text-left">
+                    <li>Научно обоснованный расчет</li>
+                    <li>Проходит за 5 минут</li>
+                    <li>Данные не сохраняются</li>
+                    <li>Персональные рекомендации</li>
+                </ul>
+                <button class="btn btn-primary" onclick="startTest()">Начать тест</button>
+            </section>
+
+            <p class="legal">Ваши ответы обрабатываются анонимно и не сохраняются на серверах.</p>
         </div>
-        
-        <div class="card">
-            <ul class="features">
-                <li>Научно обоснованный расчет</li>
-                <li>Тест займет 5 минут</li>
-                <li>Данные не сохраняются</li>
-                <li>Персональные рекомендации</li>
-            </ul>
-        </div>
-        
-        <button class="btn btn-primary" onclick="startTest()">Начать тест</button>
-        
-        <div class="privacy-note">
-            Ваши данные обрабатываются анонимно и не сохраняются на серверах
-        </div>
-    </div>
-    
+    </main>
+
     <script>
         // Инициализация Telegram WebApp
         const tg = window.Telegram?.WebApp;
@@ -137,7 +43,8 @@
         }
         
         function startTest() {
-            window.location.href = 'question1.html';
+            localStorage.removeItem('kamalama_answers');
+            window.location.href = 'questions.html';
         }
     </script>
 </body>

@@ -4,306 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KamaLama BITE - Результаты</title>
-    
+
     <!-- Telegram Mini App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .result-card {
-            text-align: center;
-            padding: 30px 20px;
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .result-number {
-            font-size: 4rem;
-            font-weight: bold;
-            color: var(--tg-theme-button-color, #007AFF);
-            margin: 20px 0;
-        }
-        
-        .recommendations {
-            text-align: left;
-            margin-top: 30px;
-        }
-        
-        .recommendation {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 4px solid #34C759;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: 15px;
-        }
-        
-        .btn-primary {
-            background: var(--tg-theme-button-color, #007AFF);
-            color: var(--tg-theme-button-text-color, #ffffff);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--tg-theme-button-color, #007AFF);
-            border: 2px solid var(--tg-theme-button-color, #007AFF);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 50px 20px;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(0, 122, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid var(--tg-theme-button-color, #007AFF);
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .hidden {
-            display: none;
-        }
-    </style>
+    <script src="scripts/layout.js"></script>
+    <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Экран загрузки -->
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <h2>Анализируем ваши ответы...</h2>
-            <p>Подготавливаем персональные рекомендации</p>
-        </div>
-        
-        <!-- Экран результатов -->
-        <div id="results" class="hidden">
-            <div class="result-card">
-                <h2>Ваши результаты</h2>
-                <div class="result-number" id="life-expectancy">78</div>
-                <div>лет ожидаемой продолжительности жизни</div>
-            </div>
-            
-            <div class="recommendations">
-                <h3>Рекомендации для улучшения:</h3>
-                <div id="recommendations-list">
-                    <!-- Рекомендации будут добавлены динамически -->
+    <main class="page">
+        <div class="container">
+            <section id="loading" class="card stack text-center loading-state">
+                <div class="spinner" aria-hidden="true"></div>
+                <h2>Анализируем ваши ответы...</h2>
+                <p class="muted">Подготавливаем персональные рекомендации</p>
+            </section>
+
+            <section id="results" class="hidden stack-lg">
+                <div class="card stack text-center">
+                    <h2>Ваши результаты</h2>
+                    <div class="result-number" id="life-expectancy">—</div>
+                    <p class="muted">лет ожидаемой продолжительности жизни</p>
+                    <p class="muted" id="result-delta"></p>
                 </div>
-            </div>
-            
-            <button class="btn btn-primary" onclick="restartTest()">Пройти тест заново</button>
-            <button class="btn btn-secondary" onclick="shareResult()">Поделиться результатом</button>
+
+                <div class="card recommendations" id="insights-card">
+                    <h3>Сильные стороны</h3>
+                    <div id="insights-list" class="recommendation-list"></div>
+                </div>
+
+                <div class="card recommendations" id="recommendations-card">
+                    <h3>Что можно улучшить</h3>
+                    <div id="recommendations-list" class="recommendation-list"></div>
+                </div>
+
+                <div class="card" id="metrics-card">
+                    <h3>Ключевые показатели</h3>
+                    <dl class="metrics" id="metrics-list"></dl>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn btn-primary" type="button" id="restart-button">Пройти тест заново</button>
+                    <button class="btn btn-secondary" type="button" id="share-button">Поделиться результатом</button>
+                </div>
+            </section>
         </div>
-    </div>
-    
-    <script>
-        // Инициализация Telegram WebApp
-        const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
-        
-        function calculateResult() {
-            // Загружаем ответы из localStorage
-            const savedAnswers = localStorage.getItem('kamalama_answers');
-            if (!savedAnswers) {
-                window.location.href = 'welcome.html';
-                return;
-            }
-            
-            const answers = JSON.parse(savedAnswers);
-            
-            // Базовая ожидаемая продолжительность жизни
-            let baseAge = 75;
-            let recommendations = [];
-            
-            // Корректировки на основе количества шагов
-            if (answers.steps === '10001_more') {
-                baseAge += 4;
-                recommendations.push({
-                    title: 'Отлично! Вы очень активны',
-                    description: 'Высокая физическая активность значительно увеличивает продолжительность жизни'
-                });
-            } else if (answers.steps === '8001_10000') {
-                baseAge += 3;
-            } else if (answers.steps === '6001_8000') {
-                baseAge += 2;
-            } else if (answers.steps === '4001_6000') {
-                baseAge += 1;
-            } else if (answers.steps === '2201_4000') {
-                baseAge -= 1;
-                recommendations.push({
-                    title: 'Увеличьте ежедневную активность',
-                    description: 'Старайтесь делать больше шагов каждый день - цель 8000-10000 шагов'
-                });
-            } else if (answers.steps === 'less_2200') {
-                baseAge -= 3;
-                recommendations.push({
-                    title: 'Критически важно увеличить активность',
-                    description: 'Малоподвижный образ жизни серьезно сокращает продолжительность жизни'
-                });
-            }
-            
-            // Корректировки на основе физической активности
-            if (answers.activity === '5_more_times') {
-                baseAge += 3;
-            } else if (answers.activity === '3_4_times') {
-                baseAge += 2;
-            } else if (answers.activity === '1_2_times') {
-                baseAge += 1;
-            } else if (answers.activity === 'rarely_never') {
-                baseAge -= 4;
-                recommendations.push({
-                    title: 'Начните заниматься спортом',
-                    description: 'Регулярные упражнения могут добавить до 7 лет жизни'
-                });
-            }
-            
-            // Корректировки на основе сна
-            if (answers.sleep === '7_8') {
-                baseAge += 3;
-                recommendations.push({
-                    title: 'Отличный режим сна!',
-                    description: 'Вы спите оптимальное количество часов для здоровья'
-                });
-            } else if (answers.sleep === '5_6') {
-                baseAge -= 1;
-                recommendations.push({
-                    title: 'Увеличьте продолжительность сна',
-                    description: 'Старайтесь спать 7-8 часов для оптального здоровья'
-                });
-            } else if (answers.sleep === 'less_5') {
-                baseAge -= 4;
-                recommendations.push({
-                    title: 'Критически важно улучшить сон',
-                    description: 'Недостаток сна серьезно влияет на здоровье и продолжительность жизни'
-                });
-            } else if (answers.sleep === 'more_8') {
-                baseAge -= 1;
-                recommendations.push({
-                    title: 'Оптимизируйте продолжительность сна',
-                    description: 'Слишком долгий сон также может негативно влиять на здоровье'
-                });
-            }
-            
-            // Добавляем общие рекомендации если их мало
-            if (recommendations.length < 2) {
-                recommendations.push({
-                    title: 'Поддерживайте здоровое питание',
-                    description: 'Сбалансированный рацион с овощами и фруктами продлевает жизнь'
-                });
-            }
-            
-            if (recommendations.length < 3) {
-                recommendations.push({
-                    title: 'Регулярные медицинские осмотры',
-                    description: 'Профилактика и раннее выявление проблем критически важны'
-                });
-            }
-            
-            return {
-                lifeExpectancy: Math.max(65, Math.min(95, Math.round(baseAge))), // Ограничиваем диапазон 65-95 лет
-                recommendations: recommendations
-            };
-        }
-        
-        function displayResults() {
-            const result = calculateResult();
-            
-            document.getElementById('life-expectancy').textContent = result.lifeExpectancy;
-            
-            const recommendationsList = document.getElementById('recommendations-list');
-            recommendationsList.innerHTML = '';
-            
-            result.recommendations.forEach(rec => {
-                const div = document.createElement('div');
-                div.className = 'recommendation';
-                div.innerHTML = `
-                    <strong>${rec.title}</strong><br>
-                    ${rec.description}
-                `;
-                recommendationsList.appendChild(div);
-            });
-            
-            // Показываем результаты после задержки
-            setTimeout(() => {
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('results').classList.remove('hidden');
-            }, 2000);
-        }
-        
-        function restartTest() {
-            localStorage.removeItem('kamalama_answers');
-            window.location.href = 'welcome.html';
-        }
-        
-        function shareResult() {
-            const result = document.getElementById('life-expectancy').textContent;
-            const text = `Мой результат теста KamaLama BITE: ${result} лет ожидаемой продолжительности жизни!`;
-            
-            if (tg) {
-                tg.sendData(JSON.stringify({
-                    action: 'share',
-                    text: text
-                }));
-            } else {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'KamaLama BITE - Мой результат',
-                        text: text
-                    });
-                } else {
-                    navigator.clipboard.writeText(text);
-                    alert('Результат скопирован в буфер обмена!');
-                }
-            }
-        }
-        
-        // Инициализация
-        displayResults();
-    </script>
+    </main>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/results.js"></script>
 </body>
 </html>

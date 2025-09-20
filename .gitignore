@@ -9,12 +9,13 @@
 !frontend/welcome.html
 !frontend/questions.html
 !frontend/results.html
-!frontend/question1.html
-!frontend/question2.html
-!frontend/question3.html
-!frontend/question4.html
-!frontend/question5.html
-!frontend/question6.html
+!frontend/scripts/
+!frontend/scripts/config.js
+!frontend/scripts/layout.js
+!frontend/scripts/questions.js
+!frontend/scripts/results.js
+!frontend/styles/
+!frontend/styles/base.css
 !.gitignore
 
 # Игнорировать системные файлы
