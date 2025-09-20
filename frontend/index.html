@@ -8,42 +8,18 @@
         // Автоматическое перенаправление на welcome.html
         window.location.href = './welcome.html';
     </script>
-    
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #007AFF, #34C759);
-            color: white;
-        }
-        .loading {
-            text-align: center;
-        }
-        .spinner {
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 4px solid white;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
-    <div class="loading">
-        <div class="spinner"></div>
-        <h2>KamaLama BITE</h2>
-        <p>Загружаем приложение...</p>
-        <p><a href="./welcome.html" style="color: white;">Если перенаправление не работает, нажмите здесь</a></p>
-    </div>
+    <main class="page">
+        <div class="container">
+            <section class="card stack text-center">
+                <div class="spinner" aria-hidden="true"></div>
+                <h2>KamaLama BITE</h2>
+                <p class="muted">Загружаем приложение...</p>
+                <p><a href="./welcome.html">Если перенаправление не работает, нажмите здесь</a></p>
+            </section>
+        </div>
+    </main>
 </body>
 </html>
