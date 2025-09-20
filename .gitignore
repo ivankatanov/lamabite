@@ -3,6 +3,7 @@
 
 # Но включить только нужные файлы
 !README.md
+!index.html
 !frontend/
 !frontend/index.html
 !.gitignore
