@@ -9,6 +9,12 @@
 !frontend/welcome.html
 !frontend/questions.html
 !frontend/results.html
+!frontend/question1.html
+!frontend/question2.html
+!frontend/question3.html
+!frontend/question4.html
+!frontend/question5.html
+!frontend/question6.html
 !.gitignore
 
 # Игнорировать системные файлы
