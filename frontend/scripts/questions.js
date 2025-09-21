@@ -61,13 +61,13 @@
     function createNumericTextInput(options) {
         const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
         const input = document.createElement('input');
-        input.type = 'text';
+        input.type = 'tel';
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
-        input.setAttribute('inputmode', allowDecimal ? 'decimal' : 'numeric');
+        input.setAttribute('inputmode', 'tel');
         input.setAttribute('enterkeyhint', enterKeyHint ?? 'done');
-        input.setAttribute('pattern', allowDecimal ? '[0-9]+([.,][0-9]+)?' : '[0-9]*');
+        input.setAttribute('pattern', '[0-9]*');
 
         if (placeholder) {
             input.placeholder = placeholder;
