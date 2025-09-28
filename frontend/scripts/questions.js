@@ -66,8 +66,8 @@
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
-        input.inputMode = 'numeric'; // Показывает цифровую клавиатуру
-        input.pattern = '[0-9]*'; // Для iOS
+        input.inputMode = 'text'; // Показывает обычную текстовую клавиатуру
+        // Убрали pattern для iOS, чтобы не ограничивать ввод только цифрами
         input.enterKeyHint = 'done'; // Показывает кнопку "Готово" на клавиатуре
         
         if (placeholder) {
