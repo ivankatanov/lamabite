@@ -669,8 +669,10 @@
             group.appendChild(wrapper);
         });
 
+        // Всегда создаем калькулятор ИМТ
         const calculator = document.createElement('div');
         calculator.className = 'bmi-calculator stack';
+        calculator.style.display = 'block'; // Явно устанавливаем отображение
 
         const inputsRow = document.createElement('div');
         inputsRow.className = 'bmi-inputs';

@@ -1,6 +1,6 @@
 (function () {
-    // Версия приложения больше не используется динамически
-    // Версия захардкожена в welcome.html
+    // Версия приложения
+    const APP_VERSION = '1.0.6';
     
     const fallbackExpectancy = 72;
 

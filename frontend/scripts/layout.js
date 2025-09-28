@@ -1,3 +1,6 @@
+// layout.js - Общие функции для всех страниц приложения
+// Версия: 1.0.6
+
 (function () {
     const root = document.documentElement;
     if (!root) {
