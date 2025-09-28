@@ -297,7 +297,7 @@
         },
         {
             id: 'bmi',
-            type: 'bmi',
+            type: 'bmi_calculator',
             title: 'Какой у вас ИМТ (индекс массы тела)?',
             description: 'Если вы не знаете свой ИМТ, используйте калькулятор ниже.',
             options: [
@@ -443,7 +443,7 @@
             renderNumberQuestion(question);
         } else if (question.type === 'country') {
             renderCountryQuestion(question);
-        } else if (question.type === 'bmi') {
+        } else if (question.type === 'bmi' || question.type === 'bmi_calculator') {
             renderBmiQuestion(question);
         }
 
