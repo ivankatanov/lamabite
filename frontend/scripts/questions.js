@@ -66,6 +66,8 @@
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
+        input.autocapitalize = 'none';
+        input.autocorrect = 'off';
         input.inputMode = 'text'; // Показывает обычную текстовую клавиатуру
         // Убрали pattern для iOS, чтобы не ограничивать ввод только цифрами
         input.enterKeyHint = 'done'; // Показывает кнопку "Готово" на клавиатуре
@@ -95,21 +97,6 @@
         });
         
         return input;
-    }
-
-    function createKeyboardDismissButton() {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'btn btn-ghost keyboard-dismiss';
-        button.textContent = 'Скрыть клавиатуру';
-        button.addEventListener('click', () => {
-            const activeElement = document.activeElement;
-            if (activeElement && typeof activeElement.blur === 'function') {
-                activeElement.blur();
-            }
-        });
-
-        return button;
     }
 
     function isWithinRange(value, min, max) {
@@ -733,8 +720,6 @@
         calculateButton.className = 'btn btn-secondary';
         calculateButton.textContent = 'Рассчитать ИМТ';
 
-        const keyboardDismissButton = createKeyboardDismissButton();
-
         const focusableInputs = [heightInput, weightInput];
 
         focusableInputs.forEach((input) => {
@@ -803,7 +788,6 @@
         });
 
         controls.appendChild(calculateButton);
-        controls.appendChild(keyboardDismissButton);
         calculator.appendChild(inputsRow);
         calculator.appendChild(controls);
         calculator.appendChild(status);
