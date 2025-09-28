@@ -721,13 +721,13 @@
         keyboardDismissButton.className = 'btn btn-ghost keyboard-dismiss';
         keyboardDismissButton.textContent = 'Готово';
         keyboardDismissButton.setAttribute('aria-label', 'Скрыть клавиатуру');
-        keyboardDismissButton.hidden = true;
+        keyboardDismissButton.style.display = 'inline-flex';
 
         const focusableInputs = [heightInput, weightInput];
         const updateKeyboardDismissVisibility = () => {
             const active = document.activeElement;
             const shouldShow = focusableInputs.includes(active);
-            keyboardDismissButton.hidden = !shouldShow;
+            keyboardDismissButton.style.display = shouldShow ? 'inline-flex' : 'none';
         };
         const scheduleKeyboardDismissUpdate = () => {
             window.setTimeout(() => {
@@ -748,7 +748,7 @@
             if (focusableInputs.includes(active)) {
                 active.blur();
             }
-            keyboardDismissButton.hidden = true;
+            keyboardDismissButton.style.display = 'none';
         });
 
         const status = document.createElement('p');
