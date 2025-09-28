@@ -716,39 +716,12 @@
         calculateButton.className = 'btn btn-secondary';
         calculateButton.textContent = 'Рассчитать ИМТ';
 
-        const keyboardDismissButton = document.createElement('button');
-        keyboardDismissButton.type = 'button';
-        keyboardDismissButton.className = 'btn btn-ghost keyboard-dismiss';
-        keyboardDismissButton.textContent = 'Готово';
-        keyboardDismissButton.setAttribute('aria-label', 'Скрыть клавиатуру');
-        keyboardDismissButton.style.display = 'inline-flex';
-
         const focusableInputs = [heightInput, weightInput];
-        const updateKeyboardDismissVisibility = () => {
-            const active = document.activeElement;
-            const shouldShow = focusableInputs.includes(active);
-            keyboardDismissButton.style.display = shouldShow ? 'inline-flex' : 'none';
-        };
-        const scheduleKeyboardDismissUpdate = () => {
-            window.setTimeout(() => {
-                updateKeyboardDismissVisibility();
-            }, 100);
-        };
-
+        
         focusableInputs.forEach((input) => {
             input.addEventListener('focus', () => {
                 ensureNextVisible();
-                updateKeyboardDismissVisibility();
             });
-            input.addEventListener('blur', scheduleKeyboardDismissUpdate);
-        });
-
-        keyboardDismissButton.addEventListener('click', () => {
-            const active = document.activeElement;
-            if (focusableInputs.includes(active)) {
-                active.blur();
-            }
-            keyboardDismissButton.style.display = 'none';
         });
 
         const status = document.createElement('p');
@@ -759,12 +732,10 @@
         }
 
         calculateButton.addEventListener('click', () => {
-            updateKeyboardDismissVisibility();
             const active = document.activeElement;
             if (focusableInputs.includes(active)) {
                 active.blur();
             }
-            keyboardDismissButton.hidden = true;
 
             const height = parseNumericValue(heightInput.value, false);
             const weight = parseNumericValue(weightInput.value, true);
