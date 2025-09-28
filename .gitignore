@@ -31,3 +31,6 @@ src/
 
 # Игнорировать PowerShell скрипт
 deploy.ps1
+
+# Игнорировать документацию
+DOCUMENTATION.md
