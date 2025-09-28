@@ -16,6 +16,7 @@
             <header class="stack text-center">
                 <span class="brand-logo">KamaLama BITE</span>
                 <p class="subtitle">Узнайте свою ожидаемую продолжительность жизни</p>
+                <p class="version-info" id="version-info">Версия: загрузка...</p>
             </header>
 
             <section class="card stack-lg text-center">
@@ -41,6 +42,13 @@
             tg.ready();
             tg.expand();
         }
+        
+        // Отображение версии приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.appConfig && window.appConfig.version) {
+                document.getElementById('version-info').textContent = 'Версия: ' + window.appConfig.version;
+            }
+        });
         
         function startTest() {
             localStorage.removeItem('kamalama_answers');

@@ -1,4 +1,12 @@
 (function () {
+    // Версия приложения (обновлять при каждом обновлении репозитория)
+    const appVersion = '1.0.0';
+    
+    // Экспортируем версию для использования в других скриптах
+    window.appConfig = {
+        version: appVersion
+    };
+    
     const fallbackExpectancy = 72;
 
     const countries = [

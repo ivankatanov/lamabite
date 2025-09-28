@@ -65,7 +65,7 @@
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
-        input.setAttribute('inputmode', 'tel');
+        input.setAttribute('inputmode', 'numeric');
         input.setAttribute('enterkeyhint', enterKeyHint ?? 'done');
         input.setAttribute('pattern', '[0-9]*');
 
