@@ -61,13 +61,16 @@
     function createNumericTextInput(options) {
         const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
         const input = document.createElement('input');
-        input.type = 'tel';
+        input.type = 'text'; // Изменено с 'tel' на 'text' для лучшей совместимости с iOS
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
         input.setAttribute('inputmode', 'numeric');
         input.setAttribute('enterkeyhint', enterKeyHint ?? 'done');
         input.setAttribute('pattern', '[0-9]*');
+        // Добавляем дополнительные атрибуты для iOS
+        input.setAttribute('data-keyboard', 'numeric');
+        input.setAttribute('data-done-button', 'true');
 
         if (placeholder) {
             input.placeholder = placeholder;
