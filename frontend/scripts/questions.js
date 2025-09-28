@@ -59,7 +59,7 @@
     }
 
     function createNumericTextInput(options) {
-        const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
+        const { allowDecimal, placeholder, enterKeyHint = 'done', onEnter } = options;
 
         const input = document.createElement('input');
         input.type = 'text'; // Используем text вместо number для iOS
@@ -68,10 +68,17 @@
         input.spellcheck = false;
         input.autocapitalize = 'none';
         input.autocorrect = 'off';
-        input.inputMode = 'text'; // Показывает обычную текстовую клавиатуру
-        // Убрали pattern для iOS, чтобы не ограничивать ввод только цифрами
-        input.enterKeyHint = 'done'; // Показывает кнопку "Готово" на клавиатуре
-        
+        const inputMode = allowDecimal ? 'decimal' : 'numeric';
+        input.inputMode = inputMode;
+        input.setAttribute('inputmode', inputMode);
+        if (!allowDecimal) {
+            input.pattern = '\\d*';
+        }
+        if (enterKeyHint) {
+            input.enterKeyHint = enterKeyHint; // Показывает кнопку "Готово" на клавиатуре
+            input.setAttribute('enterkeyhint', enterKeyHint);
+        }
+
         if (placeholder) {
             input.placeholder = placeholder;
         }
