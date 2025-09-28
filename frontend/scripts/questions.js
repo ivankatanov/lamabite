@@ -60,7 +60,7 @@
 
     function createNumericTextInput(options) {
         const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
-        
+
         const input = document.createElement('input');
         input.type = 'text'; // Используем text вместо number для iOS
         input.className = 'input';
@@ -95,6 +95,21 @@
         });
         
         return input;
+    }
+
+    function createKeyboardDismissButton() {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn-ghost keyboard-dismiss';
+        button.textContent = 'Скрыть клавиатуру';
+        button.addEventListener('click', () => {
+            const activeElement = document.activeElement;
+            if (activeElement && typeof activeElement.blur === 'function') {
+                activeElement.blur();
+            }
+        });
+
+        return button;
     }
 
     function isWithinRange(value, min, max) {
@@ -718,8 +733,10 @@
         calculateButton.className = 'btn btn-secondary';
         calculateButton.textContent = 'Рассчитать ИМТ';
 
+        const keyboardDismissButton = createKeyboardDismissButton();
+
         const focusableInputs = [heightInput, weightInput];
-        
+
         focusableInputs.forEach((input) => {
             input.addEventListener('focus', () => {
                 ensureNextVisible();
@@ -832,7 +849,7 @@
             return typeof value === 'number' && !Number.isNaN(value);
         }
 
-        if (type === 'bmi') {
+        if (type === 'bmi' || type === 'bmi_calculator') {
             if (!value) {
                 return false;
             }
