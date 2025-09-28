@@ -3,24 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KamaLama BITE - Перенаправление</title>
+    <title>KamaLama BITE - Добро пожаловать</title>
+
+    <!-- Telegram Mini App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="frontend/scripts/layout.js"></script>
-    <script>
-        // Автоматическое перенаправление на frontend/index.html
-        window.location.href = './frontend/index.html';
-    </script>
     <link rel="stylesheet" href="frontend/styles/base.css">
 </head>
 <body>
     <main class="page">
         <div class="container">
-            <section class="card stack text-center">
-                <div class="spinner" aria-hidden="true"></div>
-                <h2>KamaLama BITE</h2>
-                <p class="muted">Загружаем приложение...</p>
-                <p><a href="./frontend/index.html">Если перенаправление не работает, нажмите здесь</a></p>
+            <header class="stack text-center">
+                <span class="brand-logo">KamaLama BITE</span>
+                <p class="subtitle">Узнайте свою ожидаемую продолжительность жизни</p>
+                <p class="version-info">Версия: 1.0.0</p>
+            </header>
+
+            <section class="card stack-lg text-center">
+                <h1>Быстрый тест о здоровье и привычках</h1>
+                <p class="muted">Ответьте на несколько вопросов и получите персональные рекомендации для улучшения качества жизни.</p>
+                <ul class="feature-list text-left">
+                    <li>Научно обоснованный расчет</li>
+                    <li>Проходит за 5 минут</li>
+                    <li>Данные не сохраняются</li>
+                    <li>Персональные рекомендации</li>
+                </ul>
+                <button class="btn btn-primary" onclick="startTest()">Начать тест</button>
             </section>
+
+            <p class="legal">Ваши ответы обрабатываются анонимно и не сохраняются на серверах.</p>
         </div>
     </main>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+        
+        function startTest() {
+            localStorage.removeItem('kamalama_answers');
+            window.location.href = 'frontend/questions.html';
+        }
+    </script>
 </body>
 </html>
