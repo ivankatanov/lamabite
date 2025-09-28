@@ -61,67 +61,18 @@
     function createNumericTextInput(options) {
         const { allowDecimal, placeholder, enterKeyHint, onEnter } = options;
         
-        // Создаем обертку для поля ввода
-        const wrapper = document.createElement('div');
-        wrapper.className = 'input-wrapper';
-        wrapper.style.position = 'relative';
-        
         const input = document.createElement('input');
-        // Используем text вместо number/tel для iOS
-        input.type = 'text';
+        input.type = 'text'; // Используем text вместо number для iOS
         input.className = 'input';
         input.autocomplete = 'off';
         input.spellcheck = false;
-        // Устанавливаем все возможные атрибуты для правильной клавиатуры
-        input.setAttribute('inputmode', 'numeric');
-        input.setAttribute('enterkeyhint', 'done');
-        input.setAttribute('pattern', '[0-9]*');
+        input.inputMode = 'numeric'; // Показывает цифровую клавиатуру
+        input.pattern = '[0-9]*'; // Для iOS
+        input.enterKeyHint = 'done'; // Показывает кнопку "Готово" на клавиатуре
         
         if (placeholder) {
             input.placeholder = placeholder;
         }
-        
-        // Добавляем кнопку "Готово" для iOS
-        const doneButton = document.createElement('button');
-        doneButton.type = 'button';
-        doneButton.className = 'input-done-button';
-        doneButton.textContent = 'Готово';
-        doneButton.style.display = 'none';
-        doneButton.style.position = 'absolute';
-        doneButton.style.right = '10px';
-        doneButton.style.top = '10px';
-        doneButton.style.padding = '5px 10px';
-        doneButton.style.backgroundColor = '#007AFF';
-        doneButton.style.color = 'white';
-        doneButton.style.border = 'none';
-        doneButton.style.borderRadius = '5px';
-        doneButton.style.fontSize = '14px';
-        doneButton.style.zIndex = '100';
-        
-        // Показываем кнопку при фокусе на поле
-        input.addEventListener('focus', () => {
-            // Определяем iOS
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS) {
-                doneButton.style.display = 'block';
-            }
-        });
-        
-        // Скрываем кнопку при потере фокуса
-        input.addEventListener('blur', () => {
-            setTimeout(() => {
-                doneButton.style.display = 'none';
-            }, 300);
-        });
-        
-        // Обработчик для кнопки "Готово"
-        doneButton.addEventListener('click', () => {
-            input.blur();
-        });
-        
-        // Добавляем элементы в DOM
-        wrapper.appendChild(input);
-        wrapper.appendChild(doneButton);
         
         const sanitize = () => {
             const sanitized = sanitizeNumericString(input.value, allowDecimal);
@@ -143,7 +94,7 @@
             }
         });
         
-        return wrapper;
+        return input;
     }
 
     function isWithinRange(value, min, max) {
