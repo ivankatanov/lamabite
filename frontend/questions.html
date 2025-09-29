@@ -16,22 +16,26 @@
 <body>
     <main class="page">
         <div class="container" id="question-container">
-            <div class="progress">
-                <div class="progress__meta">
-                    <span class="progress__label" id="progress-label">Вопрос 1 из 21</span>
-                    <span class="progress__percent" id="progress-percent">0%</span>
+            <header class="page-header page-header--compact">
+                <div class="progress">
+                    <div class="progress__meta">
+                        <span class="progress__label" id="progress-label">Вопрос 1 из 21</span>
+                        <span class="progress__percent" id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-                </div>
-            </div>
+            </header>
 
-            <section class="card question-card" id="question-card">
-                <p class="question-card__meta" id="question-meta">Вопрос 1 из 21</p>
-                <h2 id="question-title"></h2>
-                <p class="muted" id="question-description"></p>
-                <div id="question-content" class="stack"></div>
-            </section>
+            <div class="content-scroll">
+                <section class="card question-card" id="question-card">
+                    <p class="question-card__meta" id="question-meta">Вопрос 1 из 21</p>
+                    <h2 id="question-title"></h2>
+                    <p class="muted" id="question-description"></p>
+                    <div id="question-content" class="stack"></div>
+                </section>
+            </div>
 
             <div class="navigation">
                 <button class="btn btn-secondary" type="button" id="back-button">Назад</button>
@@ -44,3 +48,4 @@
     <script src="scripts/questions.js?v=1.0.6"></script>
 </body>
 </html>
+
