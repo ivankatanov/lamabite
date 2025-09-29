@@ -11,6 +11,42 @@
     const KEYBOARD_THRESHOLD = 120; // px
     let focusScrollTimeout = null;
 
+    const ensureHexColor = (value) => {
+        if (typeof value !== 'string' || value.trim() === '') {
+            return null;
+        }
+        return value.startsWith('#') ? value : `#${value}`;
+    };
+
+    const applyTelegramTheme = () => {
+        const tg = window.Telegram?.WebApp;
+        if (!tg) {
+            return;
+        }
+
+        const params = tg.themeParams || {};
+        const colorMap = {
+            bg_color: '--bg',
+            secondary_bg_color: '--card',
+            text_color: '--text',
+            hint_color: '--muted',
+            button_color: '--primary',
+            link_color: '--accent',
+            button_text_color: '--button-text'
+        };
+
+        Object.entries(colorMap).forEach(([key, variable]) => {
+            const value = ensureHexColor(params[key]);
+            if (value) {
+                root.style.setProperty(variable, value);
+            }
+        });
+
+        if (typeof tg.colorScheme === 'string') {
+            root.dataset.colorScheme = tg.colorScheme;
+        }
+    };
+
     const updateViewportMetrics = () => {
         const viewport = window.visualViewport;
         const height = viewport ? viewport.height : window.innerHeight;
@@ -69,6 +105,7 @@
         window.clearTimeout(focusScrollTimeout);
     };
 
+    applyTelegramTheme();
     updateViewportMetrics();
 
     window.addEventListener('resize', updateViewportMetrics);
@@ -79,5 +116,11 @@
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', updateViewportMetrics);
         window.visualViewport.addEventListener('scroll', updateViewportMetrics);
+    }
+
+    const tg = window.Telegram?.WebApp;
+    if (tg?.onEvent) {
+        tg.onEvent('themeChanged', applyTelegramTheme);
+        tg.onEvent('viewportChanged', updateViewportMetrics);
     }
 })();

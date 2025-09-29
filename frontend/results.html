@@ -17,40 +17,47 @@
 <body>
     <main class="page">
         <div class="container">
-            <section id="loading" class="card stack text-center loading-state">
-                <div class="spinner" aria-hidden="true"></div>
-                <h2>Анализируем ваши ответы...</h2>
-                <p class="muted">Подготавливаем персональные рекомендации</p>
-            </section>
+            <header class="page-header stack text-center">
+                <h2>Ваши результаты</h2>
+                <p class="muted">Мы подготовим персональные рекомендации за пару секунд</p>
+            </header>
 
-            <section id="results" class="hidden stack-lg">
-                <div class="card stack text-center">
-                    <h2>Ваши результаты</h2>
-                    <div class="result-number" id="life-expectancy">—</div>
-                    <p class="muted">лет ожидаемой продолжительности жизни</p>
-                    <p class="muted" id="result-delta"></p>
-                </div>
+            <div class="content-scroll">
+                <section id="loading" class="card stack text-center loading-state">
+                    <div class="spinner" aria-hidden="true"></div>
+                    <h2>Анализируем ваши ответы...</h2>
+                    <p class="muted">Подготавливаем персональные рекомендации</p>
+                </section>
 
-                <div class="card recommendations" id="insights-card">
-                    <h3>Сильные стороны</h3>
-                    <div id="insights-list" class="recommendation-list"></div>
-                </div>
+                <section id="results" class="hidden stack-lg">
+                    <div class="card stack text-center">
+                        <h3>Оценка продолжительности жизни</h3>
+                        <div class="result-number" id="life-expectancy">—</div>
+                        <p class="muted">лет ожидаемой продолжительности жизни</p>
+                        <p class="muted" id="result-delta"></p>
+                    </div>
 
-                <div class="card recommendations" id="recommendations-card">
-                    <h3>Что можно улучшить</h3>
-                    <div id="recommendations-list" class="recommendation-list"></div>
-                </div>
+                    <div class="card recommendations" id="insights-card">
+                        <h3>Сильные стороны</h3>
+                        <div id="insights-list" class="recommendation-list"></div>
+                    </div>
 
-                <div class="card" id="metrics-card">
-                    <h3>Ключевые показатели</h3>
-                    <dl class="metrics" id="metrics-list"></dl>
-                </div>
+                    <div class="card recommendations" id="recommendations-card">
+                        <h3>Что можно улучшить</h3>
+                        <div id="recommendations-list" class="recommendation-list"></div>
+                    </div>
 
-                <div class="navigation">
-                    <button class="btn btn-primary" type="button" id="restart-button">Пройти тест заново</button>
-                    <button class="btn btn-secondary" type="button" id="share-button">Поделиться результатом</button>
-                </div>
-            </section>
+                    <div class="card" id="metrics-card">
+                        <h3>Ключевые показатели</h3>
+                        <dl class="metrics" id="metrics-list"></dl>
+                    </div>
+                </section>
+            </div>
+
+            <div class="navigation">
+                <button class="btn btn-primary" type="button" id="restart-button">Пройти тест заново</button>
+                <button class="btn btn-secondary" type="button" id="share-button">Поделиться результатом</button>
+            </div>
         </div>
     </main>
 
@@ -58,3 +65,4 @@
     <script src="scripts/results.js?v=1.0.6"></script>
 </body>
 </html>
+
