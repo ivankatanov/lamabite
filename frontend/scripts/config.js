@@ -1,6 +1,6 @@
 (function () {
     // Версия приложения
-    const APP_VERSION = '1.0.6';
+    const APP_VERSION = '1.1.0';
     
     const fallbackExpectancy = 72;
 
